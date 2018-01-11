@@ -14,3 +14,5 @@ npm run build
 # build配下のdmgからインストール（未検証）
 # もしくはbuild/mac/unity-launcher.appを/Applicationsもしくは~/Applicationsに移動
 ```
+
+![screenshot](./screenshot.png)
