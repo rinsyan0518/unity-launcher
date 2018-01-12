@@ -30,7 +30,6 @@ const actions = {
           return obj
         }, [])
         .map(val => {
-          console.log(val)
           const projectVersionPath = Path.join(val, 'ProjectSettings/ProjectVersion.txt')
 
           if (!Fs.existsSync(projectVersionPath)) {
