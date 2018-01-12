@@ -21,22 +21,32 @@ const actions = {
       if (err) throw err
 
       const plist = BPlistParser.parseBuffer(data)[0]
-      const recentlyUsedProjectPathList = Object.keys(plist).filter(key => {
-        return /^RecentlyUsedProjectPaths-*/.test(key)
-      }).reduce((obj, key) => {
-        obj.push(plist[key])
-        return obj
-      }, [])
+      const recentlyUsedProjectPathList = Object.keys(plist)
+        .filter(key => {
+          return /^RecentlyUsedProjectPaths-*/.test(key)
+        })
+        .reduce((obj, key) => {
+          obj.push(plist[key])
+          return obj
+        }, [])
+        .map(val => {
+          console.log(val)
+          const projectVersionPath = Path.join(val, 'ProjectSettings/ProjectVersion.txt')
 
-      projects.push(...recentlyUsedProjectPathList.map(val => {
-        const projectVersionText = Fs.readFileSync(Path.join(val, 'ProjectSettings/ProjectVersion.txt'), 'utf-8')
-        const unityVersion = projectVersionText.split('\n')[0].replace(/m_EditorVersion: */, '')
-        return {
-          projectName: Path.basename(val),
-          unityVersion: unityVersion,
-          path: val
-        }
-      }))
+          if (!Fs.existsSync(projectVersionPath)) {
+            return null
+          }
+
+          const projectVersionText = Fs.readFileSync(projectVersionPath, 'utf-8')
+          const unityVersion = projectVersionText.split('\n')[0].replace(/m_EditorVersion: */, '')
+          return {
+            projectName: Path.basename(val),
+            unityVersion: unityVersion,
+            path: val
+          }
+        })
+
+      projects.push(...recentlyUsedProjectPathList.filter(v => v))
 
       commit(types.RECEIVE_RECENTLY_USED_PROJECTS, { projects })
     })
