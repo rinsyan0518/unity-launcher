@@ -1,26 +1,35 @@
 <template>
-  <el-table
-    ref="singleTable"
-    :data="projects"
-    @row-click="handleRowClick"
-    v-loading.fullscreen.lock="fullscreenLoading"
-    :row-style="tableRowStyle"
-    style="width: 100%">
-    <el-table-column
-      property="projectName"
-      label="Project Name"
-      :show-overflow-tooltip="true"
-      width="150" />
-    <el-table-column
-      property="unityVersion"
-      label="Version"
-      :show-overflow-tooltip="true"
-      width="100" />
-    <el-table-column
-      property="path"
-      :show-overflow-tooltip="true"
-      label="Path" />
-  </el-table>
+  <span>
+    <el-table
+      ref="singleTable"
+      :data="projects"
+      @row-click="handleRowClick"
+      v-loading.fullscreen.lock="fullscreenLoading"
+      :row-style="tableRowStyle"
+      style="width: 100%">
+      <el-table-column
+        property="projectName"
+        label="Project Name"
+        :show-overflow-tooltip="true"
+        width="150" />
+      <el-table-column
+        property="unityVersion"
+        label="Version"
+        :show-overflow-tooltip="true"
+        width="100" />
+      <el-table-column
+        property="path"
+        :show-overflow-tooltip="true"
+        label="Path" />
+    </el-table>
+
+    <el-dialog
+      title="Error"
+      :visible.sync="dialogVisible"
+      width="50%">
+      <span>Unity {{ selectedVersion }} が見つかりませんでした</span>
+    </el-dialog>
+  </span>
 </template>
 
 <script>
@@ -33,6 +42,8 @@ export default {
   data () {
     return {
       fullscreenLoading: false,
+      dialogVisible: false,
+      selectedVersion: '',
       tableRowStyle: {
         cursor: 'pointer'
       }
@@ -61,6 +72,9 @@ export default {
           console.log(`executed => ${err} ${stdout} ${stderr}`)
           this.fullscreenLoading = false
         })
+      } else {
+        this.selectedVersion = item.unityVersion
+        this.dialogVisible = true
       }
     },
     ...mapActions([
