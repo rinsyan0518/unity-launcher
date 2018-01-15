@@ -3,6 +3,7 @@
     ref="singleTable"
     :data="projects"
     @row-click="handleRowClick"
+    v-loading.fullscreen.lock="fullscreenLoading"
     style="width: 100%">
     <el-table-column
       property="projectName"
@@ -28,6 +29,12 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'RecentlyUsedProjectList',
 
+  data () {
+    return {
+      fullscreenLoading: false
+    }
+  },
+
   created () {
     this.getRecentlyUsedProjects()
   },
@@ -45,8 +52,10 @@ export default {
     handleRowClick (item) {
       const unity = this.getUnityPathByVersion(item.unityVersion)
       if (unity) {
+        this.fullscreenLoading = true
         exec(`open -n '${unity.appPath}' --args -projectPath '${item.path}'`, (err, stdout, stderr) => {
           console.log(`executed => ${err} ${stdout} ${stderr}`)
+          this.fullscreenLoading = false
         })
       }
     },
