@@ -4,6 +4,7 @@
     :data="projects"
     @row-click="handleRowClick"
     v-loading.fullscreen.lock="fullscreenLoading"
+    :row-style="tableRowStyle"
     style="width: 100%">
     <el-table-column
       property="projectName"
@@ -31,7 +32,10 @@ export default {
 
   data () {
     return {
-      fullscreenLoading: false
+      fullscreenLoading: false,
+      tableRowStyle: {
+        cursor: 'pointer'
+      }
     }
   },
 
