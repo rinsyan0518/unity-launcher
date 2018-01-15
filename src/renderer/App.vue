@@ -1,7 +1,10 @@
 <template>
   <div>
-    <router-link to="/">Home</router-link>
-    <router-link to="/recently">Recently</router-link>
+    <el-menu class="el-menu-demo" mode="horizontal" :router="true">
+      <el-menu-item index="/">Home</el-menu-item>
+      <el-menu-item index="/recently">Recently</el-menu-item>
+    </el-menu>
+
     <router-view>
     </router-view>
   </div>

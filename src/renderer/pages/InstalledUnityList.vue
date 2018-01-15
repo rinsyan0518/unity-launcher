@@ -3,6 +3,8 @@
     ref="singleTable"
     :data="unitys"
     @row-click="handleRowClick"
+    v-loading.fullscreen.lock="fullscreenLoading"
+    :row-style="tableRowStyle"
     style="width: 100%">
     <el-table-column
       property="version"
@@ -24,6 +26,15 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'InstalledUnityList',
 
+  data () {
+    return {
+      fullscreenLoading: false,
+      tableRowStyle: {
+        cursor: 'pointer'
+      }
+    }
+  },
+
   created () {
     this.getInstalledUnitys()
   },
@@ -36,8 +47,10 @@ export default {
 
   methods: {
     handleRowClick (item) {
+      this.fullscreenLoading = true
       exec(`open -n ${item.appPath}`, (err, stdout, stderr) => {
         console.log(`executed => ${err} ${stdout} ${stderr}`)
+        this.fullscreenLoading = false
       })
     },
     ...mapActions([
