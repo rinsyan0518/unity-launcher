@@ -25,6 +25,16 @@ const actions = {
         .filter(key => {
           return /^RecentlyUsedProjectPaths-*/.test(key)
         })
+        .sort((a, b) => {
+          const aNum = parseInt(a.split('-')[1])
+          const bNum = parseInt(b.split('-')[1])
+          if (aNum < bNum) return -1
+          if (aNum > bNum) return 1
+          return 0
+        })
+        .map(val => {
+          return val
+        })
         .reduce((obj, key) => {
           obj.push(plist[key])
           return obj
